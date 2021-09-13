@@ -1,5 +1,4 @@
 import random
-import string
 #Ask for input
 x = input("Rock Paper Scissor:(R/P/S)")
 

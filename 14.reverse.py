@@ -2,8 +2,8 @@
 str = input("String:")
 text = []
 result = ""
+#Insert charater into the front
 for char in str:
     text.insert(0, char)
 for var in text:
-    result +=var
-print(result)
+    print(var, end="")

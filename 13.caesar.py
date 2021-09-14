@@ -19,5 +19,8 @@ for num in list:
         result.append(num - 24)
     else:
         result.append(num)
+#endfor
+
 for i in result:
     print(chr(i), end="")
+#endfor

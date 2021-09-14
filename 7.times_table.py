@@ -5,7 +5,9 @@ x = input("integer from 1 to 10:")
 if not x.isdigit():
     print("please input a integer")
     exit()
+#endif
 x = int(x)
 #print
 for i in range(x, x * 10 + 1, x):
     print(i)
+#endfor

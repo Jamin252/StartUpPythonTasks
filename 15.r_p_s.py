@@ -13,6 +13,7 @@ y = temp
 for o,n in [("R", "1"), ("P", "2"), ("S", "3")]:
     x = x.replace(o,n)
     y = y.replace(n,o)
+#endfor
 result = int(x) - int(temp)
 if result == -2 or result == 1:
     print("Win")
@@ -20,4 +21,5 @@ elif result == 0:
     print("Draw")
 elif result == -1 or result == 2:
     print("lose")
+#endif
 print(y)

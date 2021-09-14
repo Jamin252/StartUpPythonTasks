@@ -5,3 +5,6 @@ if not len(x) == 3:
     print("Please input a integer between 100 and 999")
 #print result
 print(x[0], "hundreds,", x[1], "tens, ", x[2], "units")
+
+## ACS - Good
+## Don;t forget comment after IF construct

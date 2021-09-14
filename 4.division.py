@@ -18,3 +18,6 @@ di = int(di)
 
 #print result
 print(str(inte // di) , "remainder" , str(inte % di))
+
+##ACS - Good the code works and you have thought about some error trpping
+## ACS Need more comments at the end of constructs!

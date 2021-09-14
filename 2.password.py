@@ -5,3 +5,6 @@ if len(password) > 6:
     print("Password is valid")
 else:
     print("Password is invalid")
+
+    ## ACS - Please use comments at the end of the if construct.
+    ## ACS - It helps later on with pseudo code writing.

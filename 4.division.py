@@ -5,6 +5,7 @@ inte = input("integer:")
 if not inte.isdigit():
     print("please input a integer")
     exit()
+#endif
 inte = int(inte)
 
 #Ask for divisor
@@ -14,6 +15,8 @@ di = input("devisor:")
 if not di.isdigit():
     print("please input a integer")
     exit()
+#endif
+
 di = int(di)
 
 #print result

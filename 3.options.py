@@ -1,8 +1,10 @@
 #Set ans variable
-ans = ""
+ans = int()
 #Ask for a number until user input 1 to 3
-while str(ans) != "1" and str(ans) != "2" and str(ans) != "3":
-    ans = input("From 1 to 3, please choose a number:")
+while not 0 < ans < 4:
+    ans = int(input("From 1 to 3, please choose a number:"))
+#endwhile
+
 #print the option user chose
 print(f"You have selected option number {ans}")
 

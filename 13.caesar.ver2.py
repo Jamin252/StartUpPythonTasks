@@ -1,8 +1,11 @@
+"""
+This a function that allow user to do substitution encryption or caesar encryption
+"""
 def main():
     #Ask for a string
     x = str(input("String:").lower())
     #Ask for type of encryption
-    choice = input("shift or key: ")
+    choice = input("shift or key:(please enter shift/key) ")
     if choice == "shift":
         result = caesar()
     else:

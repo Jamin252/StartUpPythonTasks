@@ -10,12 +10,8 @@ def main():
         result = caesar()
     else:
         result = sub()
-    print(x)
-    print(result)
-
     #replace the old char with the key
     for old, new in result:
-        print(old, new)
         x = x.replace(old, new)
     print(x.lower())
     return

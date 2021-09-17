@@ -13,9 +13,9 @@ for num in list:
         result.append(num + 2)
     elif num == 90 or num == 89:
         result.append(num - 24)
-    elif 97 <= num and num <=170:
+    elif 97 <= num and num <=120:
         result.append(num + 2)
-    elif num == 171 or num == 172:
+    elif num == 121 or num == 122:
         result.append(num - 24)
     else:
         result.append(num)

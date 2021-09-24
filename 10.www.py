@@ -9,3 +9,5 @@ result = string.count(" ") + 1
 
 #Print answer
 print(result)
+
+## ACS This works providing there is just one space between thew words. Good

@@ -9,3 +9,5 @@ list.sort(reverse=True)
 
 #Print
 print(list[0]+", "+list[1]+", "+list[2])
+
+## USing the sort function doens't really demonstrate your algorithm!

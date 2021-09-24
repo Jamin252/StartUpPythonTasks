@@ -15,3 +15,6 @@ for u in list:
         exit()
     print(u, end=", ")
 #endfor
+
+# ACs Good but it misses out the number itself .. e,.g. has 48 as a factor. 
+## There are some comments but your algorithm isn't really described! How does this work?

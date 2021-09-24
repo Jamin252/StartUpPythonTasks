@@ -1,28 +1,28 @@
-#Ask for input
-x = input("String:")
+"""
+This is a function that only allow user to do caesar encryption
+"""
+#Ask for shift and the string
+x = str(input("String:").lower())
+shift = int(input("shift number: "))
 
+#make a altered list
 list = []
-#Turn char in ascii code
-for char in x:
-    list.append(ord(char))
 
-#convert
-result = []
-for num in list:
-    if 65 <= num and num <=88:
-        result.append(num + 2)
-    elif num == 90 or num == 89:
-        result.append(num - 24)
-    elif 97 <= num and num <=120:
-        result.append(num + 2)
-    elif num == 121 or num == 122:
-        result.append(num - 24)
+for i in range(shift, shift + 26):
+    if i < 26:
+        list.append(chr(65 + i))
     else:
-        result.append(num)
-#endfor
+        list.append(chr(65 + i - 26))
+result = []
 
-for i in result:
-    print(chr(i), end="")
-#endfor
+#append the new key with its corresponding ABCD
+for count, key in enumerate(list):
+    result.append((chr(97 + count), key))
 
-## ACS Good iot works well but I can't see what yourporcess is. You need comments for that
+#replace the old key with the new key
+for old, new in result:
+    print(old, new)
+    x = x.replace(old, new)
+#Print the new key
+print(x.lower())
+    

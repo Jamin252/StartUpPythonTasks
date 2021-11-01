@@ -48,9 +48,14 @@ all_sprites_group = pygame.sprite.Group()
 numberOfFlakes = 50
 for i in range(numberOfFlakes):
     my_snow = Snow(WHITE, 5, 5, 1)
+    collide = pygame.sprite.spritecollide(my_snow,snow_group,True)
+    while len(collide) > 0:
+        my_snow.kill()
+        my_snow = Snow(WHITE, 5, 5, 1)
+        collide = pygame.sprite.spritecollide(my_snow,snow_group,True)
     snow_group.add(my_snow)
     all_sprites_group.add(my_snow)  
-### -- Game loop
+
 while not done:
     # -- User input and controls
     for event in pygame.event.get():

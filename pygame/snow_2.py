@@ -11,22 +11,35 @@ DARKBLUE = (0,0, 150)
 
 class Snow(pygame.sprite.Sprite):
     
-    def __init__(self,color, width, height, speed):
+    def __init__(self,color, width, height, speed, new=False):
 
         super().__init__()
         self.speed = speed
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
         self.rect = self.image.get_rect()
+        if new:
+            self.rect.y = -5
+        else:
+            self.rect.y = random.randint(0,400)
         self.rect.x = random.randint(0,600)
-        self.rect.y = random.randint(0,400)
 
     def update(self):
         self.rect.y += self.speed
         if self.rect.y >= size[1]:
-            self.rect.y = 0
+            self.kill()
+            generate(1, new=True)
 
-
+def generate(numberOfFlakes, new=False):
+    global snow_group, all_sprites_group
+    for i in range(numberOfFlakes):
+        my_snow = Snow(WHITE, 5, 5, 1, new)
+        collide = pygame.sprite.spritecollide(my_snow,snow_group,False)
+        while len(collide) > 0:
+            my_snow = Snow(WHITE, 5, 5, 1, new)
+            collide = pygame.sprite.spritecollide(my_snow,snow_group,False)
+        snow_group.add(my_snow)
+        all_sprites_group.add(my_snow)
 # -- Initialize pygame
 pygame.init()
 
@@ -46,15 +59,7 @@ xspeed = 5
 snow_group = pygame.sprite.Group()
 all_sprites_group = pygame.sprite.Group()
 numberOfFlakes = 50
-for i in range(numberOfFlakes):
-    my_snow = Snow(WHITE, 5, 5, 1)
-    collide = pygame.sprite.spritecollide(my_snow,snow_group,True)
-    while len(collide) > 0:
-        my_snow.kill()
-        my_snow = Snow(WHITE, 5, 5, 1)
-        collide = pygame.sprite.spritecollide(my_snow,snow_group,True)
-    snow_group.add(my_snow)
-    all_sprites_group.add(my_snow)  
+generate(50)
 
 while not done:
     # -- User input and controls

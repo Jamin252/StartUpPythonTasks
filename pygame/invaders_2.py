@@ -27,11 +27,9 @@ class Invader(pygame.sprite.Sprite):
         self.lives = 2
 
     def update(self):
-        global invader_group, all_sprites_group
         self.rect.y += self.speed
         if self.rect.y >= size[1]:
             self.kill()
-            invader_group, all_sprites_group = generate(1, invader_group, all_sprites_group)
     def damage(self, damage):
         self.lives += damage
         return self.lives
@@ -170,6 +168,7 @@ while not done:
         if current_time - player.time >= 1400:
             player.bullet_count = 50
             player.time = False
+    invader_group, all_sprites_group = generate(numberOfInvaders - len(invader_group), invader_group, all_sprites_group)
 
     player.update()
     # -- Screen background is BLACK

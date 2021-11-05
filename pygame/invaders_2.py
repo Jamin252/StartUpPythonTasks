@@ -10,7 +10,7 @@ RED = (255,50,50)
 DARKBLUE = (0,0, 150)
 RED = (255,0,0)
 VICTORYCONDITION = 100
-INVADERSPEED = 2
+INVADERSPEED = 1
 BULLETCOUNT = 70
 INVADERLIVES = 2
 
@@ -22,16 +22,32 @@ class Invader(pygame.sprite.Sprite):
         self.speed = speed
         self.image = pygame.transform.scale(pygame.image.load("invader.png").convert_alpha(), (50,50))
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0,600)
+        self.rect.x = random.randint(100,500)
         self.rect.y = random.randint(-100, 0)
         self.x =self.rect.x
         self.y = self.rect.y
         self.lives = INVADERLIVES
+        self.hspeed = 1
 
     def update(self):
+        global invader_group
+        self.rect.x += self.hspeed
         self.rect.y += self.speed
         if self.rect.y >= size[1]:
-            self.kill()
+            self.respawn()
+        if any(item.rect.x >= size[0] - 50 or item.rect.x <= 0 for item in invader_group):
+            self.hspeed *= -1
+    
+    def respawn(self):
+        global invader_group
+        self.rect.x = random.randint(0,600)
+        self.rect.y = random.randint(-100, 0)
+        collide = pygame.sprite.spritecollide(self,invader_group,False)
+        while len(collide) > 1:
+            self.rect.x = random.randint(0,600)
+            self.rect.y = random.randint(-100, 0)
+            collide = pygame.sprite.spritecollide(self,invader_group,False)
+
     def damage(self, damage):
         self.lives += damage
         return self.lives
@@ -180,19 +196,16 @@ while not done:
         for hit in invader_hit_group:
             hp = hit.damage(-1)
             if hp <= 0:
-                hit.kill()
-                invader_group, all_sprites_group = generate(1, invader_group, all_sprites_group)
+                hit.respawn()
                 player.score += 1
     for foo in player_hit_group:
         player.lives=player.lives-1
-        foo.kill()
-        invader_group, all_sprites_group = generate(1, invader_group, all_sprites_group) 
+        foo.respawn()
     current_time = pygame.time.get_ticks()
     if type(player.time) == type(1):
         if current_time - player.time >= 1400:
             player.bullet_count = 50
             player.time = False
-    invader_group, all_sprites_group = generate(numberOfInvaders - len(invader_group), invader_group, all_sprites_group)
     player.update()
     # -- Screen background is BLACK
     screen.fill(BLACK)

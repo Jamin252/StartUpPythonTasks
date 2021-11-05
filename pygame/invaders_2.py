@@ -1,4 +1,4 @@
-import pygame, random,time
+import pygame, random, math
 # --Global Constant
 
 # -- Color 
@@ -11,6 +11,8 @@ DARKBLUE = (0,0, 150)
 RED = (255,0,0)
 VICTORYCONDITION = 100
 INVADERSPEED = 2
+BULLETCOUNT = 70
+INVADERLIVES = 2
 
 class Invader(pygame.sprite.Sprite):
     
@@ -18,13 +20,13 @@ class Invader(pygame.sprite.Sprite):
 
         super().__init__()
         self.speed = speed
-        self.image = pygame.transform.scale(pygame.image.load("invader.png"), (50,50))
+        self.image = pygame.transform.scale(pygame.image.load("invader.png").convert_alpha(), (50,50))
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0,600)
         self.rect.y = random.randint(-100, 0)
         self.x =self.rect.x
         self.y = self.rect.y
-        self.lives = 2
+        self.lives = INVADERLIVES
 
     def update(self):
         self.rect.y += self.speed
@@ -48,7 +50,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 300
         self.rect.y = size[1]- height
         self.lives = 5  
-        self.bullet_count = 70
+        self.bullet_count = BULLETCOUNT
         self.score = 0
         self.time = False
 
@@ -117,10 +119,26 @@ bullet_group = pygame.sprite.Group()
 score_coor = (10, 10)
 lives_coor = (10, 50)
 bullet_coor = (10, 90)
+time_coor = (10, 130)
 
 font = pygame.font.Font("freesansbold.ttf", 20)
 victory = False
+tempTime = pygame.time.get_ticks()
+timeDiff = pygame.time.get_ticks() - tempTime
+timeTxt = None
+pygame.font.Font("freesansbold.ttf", 1000)
+while timeDiff < 4000:
+    tempTxt = str(math.floor(3 - timeDiff/1000))
+    timeTxt = font.render(str(math.floor(4 - timeDiff/1000)), True, WHITE)
+    screen.fill(BLACK)
+    screen.blit(timeTxt,(size[0]/2, size[1]/2))
+    pygame.display.flip()
+    timeDiff = pygame.time.get_ticks() - tempTime
+produce_bullet = False
+bulletTemp = 0
+startTime = pygame.time.get_ticks()
 while not done:
+    timeNow = pygame.time.get_ticks() - startTime
     # -- User input and controls
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -130,24 +148,30 @@ while not done:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 player.player_set_speed(-5)
-            elif event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT:
                 player.player_set_speed(5)
-            elif event.key == pygame.K_UP:
-                if player.getBulletCount() >0:
-                    bullet = Bullet(RED, player.rect.x + 5, player.rect.y)
-                    player.change_bullet(-1)
-                    bullet_group.add(bullet)
-                    all_sprites_group.add(bullet)
-            elif event.key == pygame.K_r:
+            if event.key == pygame.K_SPACE:
+                produce_bullet = True
+                bulletTemp = 0
+            if event.key == pygame.K_r:
                 player.time = pygame.time.get_ticks()
                 player.bullet_count = 0
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 player.player_set_speed(0)
+            if event.key == pygame.K_SPACE:
+                produce_bullet = False
             
         #Endif
     #Next event
     #--Game logic goes after this comment
+    if produce_bullet and player.getBulletCount() > 0 and bulletTemp % 15 == 0:
+        bullet = Bullet(RED, player.rect.x + 5, player.rect.y)
+        player.change_bullet(-1)
+        bullet_group.add(bullet)
+        all_sprites_group.add(bullet)
+    if produce_bullet:
+        bulletTemp += 1
     all_sprites_group.update()
     player_hit_group=pygame.sprite.spritecollide(player,invader_group,False)
     bullet_hit_group = pygame.sprite.groupcollide(bullet_group,invader_group,True, False)
@@ -169,7 +193,6 @@ while not done:
             player.bullet_count = 50
             player.time = False
     invader_group, all_sprites_group = generate(numberOfInvaders - len(invader_group), invader_group, all_sprites_group)
-
     player.update()
     # -- Screen background is BLACK
     screen.fill(BLACK)
@@ -184,6 +207,8 @@ while not done:
     screen.blit(lifetxt, lives_coor) 
     bullettxt = font.render("bullets: "+ str(player.bullet_count), True, WHITE)
     screen.blit(bullettxt, bullet_coor) 
+    timetxt = font.render("Time: "+ str(round(timeNow/1000, 1)), True, WHITE)
+    screen.blit(timetxt, time_coor) 
     # -- flip display to reveal new position of objects
     pygame.display.flip()
 
@@ -195,9 +220,11 @@ while not done:
         done = True
 #Endwhile
 screen.fill(BLACK)
-pygame.font.Font("freesansbold.ttf", 500)
+pygame.font.Font("freesansbold.ttf", 1000)
 resulttxt = font.render("VICTORY" if victory else "DEFEAT", True, WHITE)
 screen.blit(resulttxt, (size[0]/2-50, size[1]/2)) 
 pygame.display.flip()
-time.sleep(2)
+tempTime = pygame.time.get_ticks()
+while pygame.time.get_ticks() - tempTime < 2000:
+    pass
 pygame.quit()

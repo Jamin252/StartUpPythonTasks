@@ -4,11 +4,8 @@ import pygame, random, math
 # -- Color 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
-BLUE = (50,50, 255)
 YELLOW = (255,255,0)
 RED = (255,50,50)
-DARKBLUE = (0,0, 150)
-RED = (255,0,0)
 VICTORYCONDITION = 100
 INVADERSPEED = 1
 BULLETCOUNT = 70
@@ -26,18 +23,18 @@ class Invader(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(100,500)
         self.rect.y = random.randint(-100, 0)
-        self.x =self.rect.x
-        self.y = self.rect.y
         self.lives = INVADERLIVES
-        self.hspeed = 1
 
     def update(self, game):
-        self.rect.x += self.hspeed
+        oldx = self.rect.x
+        self.rect.x += game.invader_group_hspeed
         self.rect.y += self.speed
         if self.rect.y >= SIZE[1]:
             self.respawn(game)
         if any(item.rect.x >= SIZE[0] - 50 or item.rect.x <= 0 for item in game.invader_group):
-            self.hspeed *= -1
+            self.rect.x = oldx
+            game.invader_changeDirection = True
+
     
     def respawn(self, game):
         self.rect.x = random.randint(0,600)
@@ -51,6 +48,7 @@ class Invader(pygame.sprite.Sprite):
     def damage(self, damage):
         self.lives += damage
         return self.lives
+
 
 class Player(pygame.sprite.Sprite):
     
@@ -99,13 +97,21 @@ class Player(pygame.sprite.Sprite):
                 self.produce_bullet = True
                 self.bulletTemp = 0
             if event.key == pygame.K_r:
-                self.time = pygame.time.get_ticks()
+                self.reloadTime = pygame.time.get_ticks()
                 self.bullet_count = 0
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 self.player_set_speed(0)
             if event.key == pygame.K_SPACE:
                 self.produce_bullet = False
+    
+    def checkReload(self):
+        current_time = pygame.time.get_ticks()
+        if type(self.reloadTime) == type(1):
+            if current_time - self.reloadTime >= 1400:
+                self.bullet_count = 50
+                self.time = False
+
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, color, xcoor, ycoor):
@@ -118,10 +124,14 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = ycoor
 
     def update(self):
+
         self.rect.y -= self.speed
         if self.rect.y <= 0:
             self.kill()
+
+
 class Scoreboard():
+
     def __init__(self):
         self.score_coor = (10, 10)
         self.lives_coor = (10, 50)
@@ -140,7 +150,10 @@ class Scoreboard():
         screen.blit(bullettxt, self.bullet_coor) 
         timetxt = self.font.render("Time: "+ str(round(self.timeNow/1000, 1)), True, WHITE)
         screen.blit(timetxt, self.time_coor) 
+
+
 class Game():
+
     def __init__(self):
         self.size = SIZE
         self.screen = pygame.display.set_mode(self.size)
@@ -156,6 +169,8 @@ class Game():
         self.all_sprites_group.add(player)
         self.generate(NUMOFINVADERS)
         self.victory = False
+        self.invader_group_hspeed = 1
+        self.invader_changeDirection = False
         
         
     def generate(self, numberOfInvaders):
@@ -191,12 +206,17 @@ class Game():
     def logic(self):
         self.produce_bullet()
         self.invader_group.update(self)
+        self.checkInvaderDirection()
         self.player_group.update()
         self.bullet_group.update()
         self.bulletInvaderInteraction()
         self.playerInvaderInteraction()
         self.checkReload()
         
+    def checkInvaderDirection(self):
+        if self.invader_changeDirection:
+            self.invader_group_hspeed *= -1
+        self.invader_changeDirection = False
 
     def produce_bullet(self):
         for tempplayer in self.player_group:
@@ -229,11 +249,7 @@ class Game():
     
     def checkReload(self):
         for tempPlayer in self.player_group:
-            current_time = pygame.time.get_ticks()
-            if type(tempPlayer.reloadTime) == type(1):
-                if current_time - tempPlayer.reloadTime >= 1400:
-                    tempPlayer.bullet_count = 50
-                    tempPlayer.time = False
+            tempPlayer.checkReload()
 
     def drawScreen(self):
         self.screen.fill(BLACK)
@@ -268,6 +284,7 @@ class Game():
             pass
     
     def play(self):
+
         done = False
         while not done:
             self.setTimeNow()
@@ -288,3 +305,12 @@ class Game():
             done = True if self.finishCondition() else done
         #Endwhile
         self.finishScreen()
+
+
+
+def runGame():
+    pygame.init()
+
+    game = Game()
+    game.play()
+    pygame.quit()

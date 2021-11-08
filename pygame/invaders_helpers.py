@@ -110,7 +110,7 @@ class Player(pygame.sprite.Sprite):
         if type(self.reloadTime) == type(1):
             if current_time - self.reloadTime >= 1400:
                 self.bullet_count = 50
-                self.time = False
+                self.reloadTime = False
 
 
 class Bullet(pygame.sprite.Sprite):

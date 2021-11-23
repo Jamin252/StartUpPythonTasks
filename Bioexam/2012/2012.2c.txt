@@ -1,0 +1,2 @@
+It will exit in a point's curve part
+It will be travelling from any of (M,N,O,P,Q,R,S,T) to any of (U,V,W,X)

@@ -9,4 +9,4 @@ class Dice():
         result = []
         for i in range(num):
             result.append(random.randint(1,self.faceNum))
-        return sum(result)
+        return sum(result), result

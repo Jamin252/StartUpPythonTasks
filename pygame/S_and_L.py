@@ -4,14 +4,22 @@ from csv import reader
 
 WIN_CONDITION = 100
 
+#Player class
 class Player():
     
+    """
+    It is the innitialize function which take in the player's number
+    """
     def __init__(self, playerNum):
         self.playerNum = playerNum
         self.position = 0
 
+#Obstacal Class -- The parent class of snake and ladder
 class Obstacal():
     
+    """
+    
+    """
     def __init__(self, start, end):
         self.start = start
         self.end = end

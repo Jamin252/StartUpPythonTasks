@@ -8,5 +8,5 @@ class Dice():
     def roll(self,num = 1):
         result = []
         for i in range(num):
-            result.append(random.randint(0,self.faceNum))
-        return result
+            result.append(random.randint(1,self.faceNum))
+        return sum(result)

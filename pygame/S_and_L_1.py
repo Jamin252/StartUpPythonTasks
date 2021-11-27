@@ -149,7 +149,8 @@ class Game():
     def play(self):
         while True:
             for player in self.playerGroup:
-                input("Press Enter to continue")
+                #Start the round
+                input("\nPress Enter to continue")
 
                 #Roll the dice
                 sumOfMoves, dices = self.rollDice()
@@ -172,7 +173,7 @@ class Game():
 
                 #set player to new position
                 player.setPosition(final)
-                
+
                 #print output
                 self.playerMovement(player,original, final,sumOfMoves,dices,moved, overTheLine,start)
 
@@ -194,7 +195,10 @@ class Game():
         return False
     #print what have done in this round
     def playerMovement(self,player, original,final,sumOfMoves, dices,moved, overTheLine,start):
+        #Print what has the player rolled
         print(f"player {player.getName()} rolled ", *dices,f". Total of {sumOfMoves} moves")
+
+        #Print what is the innitial movement
         print(f"player {player.getName()} has moved from {original} to {original + sumOfMoves}")
 
         #Check if it is over the line
@@ -204,6 +208,7 @@ class Game():
         #check if it is moved by obstacle
         if not moved == None:
             print(f"but he encounter {moved}, so he moved from {start} to {final}.")
+        return
         #raise NotImplementedError
 
     #checkObstacal: check if the position have a obstacle and return the start and end and 
@@ -245,6 +250,7 @@ def main():
     #declare ladder and snake dictionary
     ladderDict = {}
     snakeDict = {}
+
     #open S_and_L.csv
         #reader the file
     with open("S_and_L.csv", "r") as f:
@@ -279,6 +285,7 @@ def main():
     numOfFaces = -1
     while numOfFaces < 3:
         numOfFaces = int(input("Number of faces on the dice: "))
+
     #Innitialize a game object
     game  = Game(ladderDict, snakeDict, numOfPlayer = numOfPlayer, numOfDice= numOfDice, numOfFaces= numOfFaces)
     game.play()

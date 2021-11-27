@@ -71,7 +71,7 @@ class Player():
         position = self.getPosition()
         target = position + numOfMoves
         return position, target
-        raise NotImplemented
+        raise NotImplementedError
 
     def getPosition(self):
         return self.position
@@ -121,6 +121,8 @@ class Game():
             self.snakeGroup.append(snake)
 
         self.ladderGroup = []
+
+        #loop through ladderDict
         for key in ladderDict.keys():
             ladder = Ladder(key, ladderDict[key])
             self.ladderGroup.append(ladder)
@@ -161,12 +163,16 @@ class Game():
                     #reverse the move
                     overTheLine = True
                     final = 200 - original - sumOfMoves
+
                 #check if the player encounter a obstacle
                 start, end, moved = self.checkObstacal(final)
-                print(f"end = {end}, moved = {moved}")
+
                 #change the final to end
                 final = end
+
+                #set player to new position
                 player.setPosition(final)
+                
                 #print output
                 self.playerMovement(player,original, final,sumOfMoves,dices,moved, overTheLine,start)
 

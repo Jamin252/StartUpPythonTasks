@@ -1,5 +1,36 @@
-import pygame, math
-# --Global Constant
+import pygame, math, random, time
+
+def ballAnimation(ballspeedx, ballspeedy, ballradius):
+    temp_score = score
+    temp_life = life
+    ball.x += ballspeedx
+    ball.y += ballspeedy
+
+    if ball.top <=0 or ball.bottom >= size[1]:
+        ballspeedy *= -1
+    
+    if ball.right >= size[0] - ballradius:
+        ballspeedx *= -1
+    
+    #Score
+    if ball.left <= 0:
+        temp_life = life - 1
+        ball.x, ball.y = random.randint(40, size[0] - 40), random.randint(40, size[1] - 40)
+    
+    if ball.colliderect(player):
+        ballspeedx *= -1
+        temp_score = score + 1
+    return ballspeedx, ballspeedy, temp_score, temp_life
+
+def playerAnimation(lPadSpeed):
+    player.y += lPadSpeed
+
+    if player.top <= 0:
+        player.top = 0 
+    if player.bottom >= size[1]:
+        player.bottom = size[1]
+
+
 
 # -- Color 
 BLACK = (0,0,0)
@@ -9,57 +40,69 @@ YELLOW = (255,255,0)
 RED = (255,50,50)
 DARKBLUE = (0,0, 150)
 
-# -- Initialize pygame
 pygame.init()
 
-# -- Blank Screen
 size = (640, 400)
 screen = pygame.display.set_mode(size)
-# -- Title of new window/screen
-surface = pygame.display.set_caption("Pong")
-# -- Exit game flag set to False
-done = False
-sun_x = 40
-sun_y = 100
-sun_flag = True
-ballWidth = 20
-x_val = 150
-y_val = 200
-x_direction = 1
-y_direction = 1
-# -- Manages how fast screen refresh
-clock = pygame.time.Clock()
 
-### -- Game loop
+surface = pygame.display.set_caption("Pong")
+
+done = False
+ballx = 320
+bally = 200
+ballradius = 20
+ballspeedx = 5
+ballspeedy = 5
+pady = 200
+lPadSpeed = 0
+pad_width = 15
+pad_length = 60
+score = 0
+life = 10
+font = pygame.font.Font("freesansbold.ttf", 32)
+score_coor = (500, 10)
+life_coor = (500, 30)
+player = pygame.Rect(0, pady, pad_width, pad_length)
+ball = pygame.Rect(ballx, bally, ballradius, ballradius)
+
+
+clock = pygame.time.Clock()
 while not done:
-    # -- User input and controls
+
+    # --User Input
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        #Endif
-    #Next event
-    #--Game logic goes after this comment
-    x_val += x_direction
-    y_val += y_direction
-    # -- Screen background is BLACK
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                lPadSpeed = -5
+            elif event.key == pygame.K_DOWN:
+                lPadSpeed = 5
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                lPadSpeed = 0
+    
+
+    #Logics
+    ballspeedx, ballspeedy, score, life = ballAnimation(ballspeedx, ballspeedy, ballradius)
+    playerAnimation(lPadSpeed)
+    if life == 0 or score == 15:
+        done = True
+
     screen.fill(BLACK)
+    #Draw
+    pygame.draw.rect(screen, WHITE, ball)
+    pygame.draw.rect(screen, BLUE, player)
+    scoretxt = font.render("Score: "+ str(score), True, WHITE)
+    screen.blit(scoretxt, score_coor)
+    lifetxt = font.render("life: "+ str(life), True, WHITE)
+    screen.blit(lifetxt, life_coor)
 
-    # -- Draw here
-    # screen, [red, blue, green], (left, top, width, height))
-    pygame.draw.rect(screen,BLACK, (0,0, size[0],size[1]))
-    pygame.draw.rect(screen,BLUE,(x_val, y_val,ballWidth,ballWidth))
-
-    # circle(surface, color, center, radius, width)
-    pygame.draw.circle(screen,YELLOW,(sun_x,sun_y),40,0)
-
-    # -- flip display to reveal new position of objects
     pygame.display.flip()
 
     # - The clock ticks over
     clock.tick(60)
-    if sun_x > size[0] + 40 or sun_x < -40:
-        screen.fill(DARKBLUE)
-        pygame.display.update()
-        pygame.time.delay(100)
-#Endwhile
+
+
 pygame.quit()
+

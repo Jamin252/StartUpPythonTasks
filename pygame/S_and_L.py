@@ -129,6 +129,7 @@ class Game():
 
         self.numOfDice = numOfDice
         self.winCondition = 100
+        self.done = False
             
 
 
@@ -147,7 +148,7 @@ class Game():
                 #check if win or not using checkWin
 
     def play(self):
-        while True:
+        while not self.done:
             for player in self.playerGroup:
                 #Start the round
                 input("\nPress Enter to continue")
@@ -180,7 +181,8 @@ class Game():
                 #check if win
                 if self.checkWin(final):
                     self.winOutput(player)
-                    exit()
+                    self.done = True
+                    break
                     
         #raise NotImplementedError
 

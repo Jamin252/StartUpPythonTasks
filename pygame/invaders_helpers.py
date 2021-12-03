@@ -19,7 +19,8 @@ class Invader(pygame.sprite.Sprite):
 
         super().__init__()
         self.speed = speed
-        self.image = pygame.transform.scale(pygame.image.load("invader.png").convert_alpha(), (50,50))
+        self.image = pygame.transform.scale(pygame.image.load("invader3.png"), (50,50)).convert()
+        #self.image.fill((*RED, 1), None, pygame.BLEND_RGBA_MULT)
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(100,500)
         self.rect.y = random.randint(-100, 0)

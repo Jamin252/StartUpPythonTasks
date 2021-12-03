@@ -19,7 +19,7 @@ class Invader(pygame.sprite.Sprite):
         self.image.fill(color)
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0,600)
-        self.rect.y = random.randint(0,-50)
+        self.rect.y = random.randint(-50, 0)
 
     def update(self):
         self.rect.y += self.speed

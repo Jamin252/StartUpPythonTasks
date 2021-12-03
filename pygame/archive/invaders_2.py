@@ -188,7 +188,11 @@ while not done:
         all_sprites_group.add(bullet)
     if produce_bullet:
         bulletTemp += 1
+
+
     all_sprites_group.update()
+
+
     player_hit_group=pygame.sprite.spritecollide(player,invader_group,False)
     bullet_hit_group = pygame.sprite.groupcollide(bullet_group,invader_group,True, False)
     for bullet in bullet_hit_group:
@@ -202,10 +206,13 @@ while not done:
         player.lives=player.lives-1
         foo.respawn()
     current_time = pygame.time.get_ticks()
+
     if type(player.time) == type(1):
         if current_time - player.time >= 1400:
             player.bullet_count = 50
             player.time = False
+
+
     player.update()
     # -- Screen background is BLACK
     screen.fill(BLACK)

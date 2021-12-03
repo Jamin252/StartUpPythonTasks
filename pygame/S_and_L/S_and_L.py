@@ -1,6 +1,9 @@
 from helper import Dice
 from csv import reader
+import sqlite3
 
+
+db = sqlite3.connect("S_and_L.db").cursor
 #Obstacle Class
 class Obstacle():
     """
@@ -182,6 +185,7 @@ class Game():
                 if self.checkWin(final):
                     self.winOutput(player)
                     self.done = True
+
                     break
                     
         #raise NotImplementedError

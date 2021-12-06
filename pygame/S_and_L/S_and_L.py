@@ -1,9 +1,17 @@
-from helper import Dice
 from csv import reader
 import sqlite3
 
+import os, sys,inspect
+import random
 
-db = sqlite3.connect("S_and_L.db").cursor
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from helper import Dice
+
+con = sqlite3.connect("S_and_L.db")
+db = con.cursor()
 #Obstacle Class
 class Obstacle():
     """
@@ -151,7 +159,9 @@ class Game():
                 #check if win or not using checkWin
 
     def play(self):
+        step = 0
         while not self.done:
+            step += 1
             for player in self.playerGroup:
                 #Start the round
                 input("\nPress Enter to continue")
@@ -183,9 +193,8 @@ class Game():
 
                 #check if win
                 if self.checkWin(final):
-                    self.winOutput(player)
+                    self.winOutput(player, step)
                     self.done = True
-
                     break
                     
         #raise NotImplementedError
@@ -247,8 +256,13 @@ class Game():
         raise NotImplementedError
 
     #Output when someone win
-    def winOutput(self,player):
+    def winOutput(self,player, step):
         print(f"Player {player.getName()} has won!!")
+        db.execute("INSERT INTO ScoreBoard (name, score) VALUES ('{0}', {1});".format(str(player.getName()), 100 - step))
+        x = db.execute("SELECT name, score FROM ScoreBoard ORDER BY(score) DESC").fetchall()
+        con.commit()
+        for i in range(3):
+            print(f"Rank {i+ 1} | name: {x[i][0]} | score: {x[i][1]}")
         #raise NotImplementedError
 
 #Main function
@@ -301,3 +315,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

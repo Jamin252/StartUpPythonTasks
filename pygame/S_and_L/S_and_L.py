@@ -2,7 +2,6 @@ from csv import reader
 import sqlite3
 
 import os, sys,inspect
-import random
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -257,12 +256,15 @@ class Game():
 
     #Output when someone win
     def winOutput(self,player, step):
-        print(f"Player {player.getName()} has won!!")
-        db.execute("INSERT INTO ScoreBoard (name, score) VALUES ('{0}', {1});".format(str(player.getName()), 100 - step))
+        print(f"Player {player.getName()} has won with {101-step} points!!")
+        db.execute("INSERT INTO ScoreBoard (name, score) VALUES ('{0}', {1});".format(str(player.getName()), 101 - step))
         x = db.execute("SELECT name, score FROM ScoreBoard ORDER BY(score) DESC").fetchall()
         con.commit()
         for i in range(3):
             print(f"Rank {i+ 1} | name: {x[i][0]} | score: {x[i][1]}")
+        y = db.execute("SELECT name, score FROM ScoreBoard WHERE score = {0}".format(x[2][1])).fetchall()
+        for j in range(len(y)-1):
+            print(f"Rank 3 | name: {y[j+1][0]} | score: {y[j+1][1]}")
         #raise NotImplementedError
 
 #Main function
